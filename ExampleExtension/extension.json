@@ -1,0 +1,24 @@
+{
+	"name": "ExampleExtension",
+	"author": "Me",
+	"version": "1.0.0",
+	"url": "https://www.mediawiki.org/wiki/Extension:ExampleExtension",
+	"descriptionmsg": "exampleextension-desc",
+	"license-name": "GPL-2.0-or-later",
+	"type": "parserhook",
+	"MessagesDirs": {
+		"ExampleExtension": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"ExampleExtensionHooks": "src/ExampleExtensionHooks.php"
+	},
+	"ExtensionMessagesFiles": {
+		"ExampleExtensionMagic": "ExampleExtension.i18n.php"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": "ExampleExtensionHooks::onParserFirstCallInit"
+	},
+	"manifest_version": 1
+}
