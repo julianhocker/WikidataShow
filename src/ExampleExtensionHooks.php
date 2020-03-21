@@ -32,35 +32,127 @@ class ExampleExtensionHooks {
 		#$result = $entity ->  label;
 		
 		#get information
-		$image = $properties['P18'] -> values[0] -> label;
-		$image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
-		$adress = $properties['P6375']-> values[0]-> label;
-		$website = $properties['P856']-> values[0] -> label;	
-		$coordinates = 	$properties['P625']-> values[0] -> label;
-		$names = $properties['P1448']-> values;
-		$nameresult = "";
-		foreach($names as $item) {
-			$oldname = $item -> label;
-			$nametime = $item -> qualifiers[0] -> value;
-			$nameresult .= "\n# $oldname; $nametime";
-		}
-		$founded = $properties['P1249']-> values[0] -> label;
-		$instances = $properties['P31']-> values;
-		$instanceresult = "";
-		foreach($instances as $item) {
-			$instance = $item -> label;
-			#$nametime = $item -> qualifiers[0] -> value;
-			$instanceresult .= "\n# $instance";
-		}
+        #picture (p18)
+		try {
+            if (empty($properties['P18'] -> values[0] -> label)){
+                throw new Exception("not defined");
+            }else {
+                $image = $properties['P18'] -> values[0] -> label;
+          	    $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
+          	    $imagewiki = "[[File:$image|400px]]";
+            }
+        }
+        //catch exception
+        catch(Exception $e) {
+          $imagewiki = $e->getMessage();
+        }
+        #adress
+		try {
+            if (empty($properties['P6375'] -> values[0] -> label)){
+                throw new Exception("not defined");
+            }else {
+                $adress = $properties['P6375']-> values[0]-> label;
+            }
+        }
+        //catch exception
+        catch(Exception $e) {
+          $adress = $e->getMessage();
+        }
+        #website
+		try {
+            if (empty($properties['P856']-> values[0] -> label)){
+                throw new Exception("not defined");
+            }else {
+                $website = $properties['P856']-> values[0] -> label;
+            }
+        }
+        //catch exception
+        catch(Exception $e) {
+          $website = $e->getMessage();
+        }
+        #coordinates
+		try {
+            if (empty($properties['P625'] -> values[0] -> label)){
+                throw new Exception("not defined");
+            }else {
+                $coordinates = 	$properties['P625']-> values[0] -> label;
+            }
+        }
+        //catch exception
+        catch(Exception $e) {
+          $coordinates = $e->getMessage();
+        }
+        #names
+		try {
+            if (empty($properties['P1448'] -> values[0] -> label)){
+                throw new Exception("not defined");
+            }else {
+                	$names = $properties['P1448']-> values;
+                	$nameresult = "";
+                	foreach($names as $item) {
+                		$oldname = $item -> label;
+                		$nametime = $item -> qualifiers[0] -> value;
+                		$nameresult .= "\n# $oldname; $nametime";
+                	}
+            }
+        }
+        //catch exception
+        catch(Exception $e) {
+          $nameresult = $e->getMessage();
+        }
+        #founded
+        try {
+             if (empty($properties['P1249'] -> values[0] -> label)){
+                 throw new Exception("not defined");
+                    }else {
+                        $founded = $properties['P1249']-> values[0] -> label;
+                    }
+                }
+                //catch exception
+                catch(Exception $e) {
+                  $founded = $e->getMessage();
+                }
+         #instances
+		try {
+            if (empty($properties['P31'] -> values[0] -> label)){
+                throw new Exception("not defined");
+            }else {
+                	$instances = $properties['P31']-> values;
+                	$instanceresult = "";
+                	foreach($instances as $item) {
+                		$instance = $item -> label;
+                		$instanceresult .= "\n# $instance";
+                	}
+            }
+        }
+        //catch exception
+        catch(Exception $e) {
+          $instanceresult = $e->getMessage();
+        }
+
+
+
+
+
+
 		
 		#get links
-			$url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
-			$json_data = file_get_contents($url);		
-			$apiresponse = json_decode($json_data, true);
-			$wikipedialink = $apiresponse['entities'][$wikidataentry]['sitelinks']['dewiki']['title'];
-			$wikipedialink = str_replace(" ","_",$wikipedialink); #hack to make link pretty
-		
-		
+		$url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
+        $json_data = file_get_contents($url);
+        $apiresponse = json_decode($json_data, true);
+		try {
+            if (empty($apiresponse['entities'][$wikidataentry]['sitelinks']['dewiki']['title'])){
+                throw new Exception("not defined");
+            }else {
+                $wikipedialink = $apiresponse['entities'][$wikidataentry]['sitelinks']['dewiki']['title'];
+                $wikipedialink = str_replace(" ","_",$wikipedialink); #hack to make link pretty
+            }
+        }
+        //catch exception
+        catch(Exception $e) {
+          $wikipedialink = $e->getMessage();
+        }
+
 		##make a pretty output of our results
         $output = "
 {| class='wikitable'
@@ -80,7 +172,7 @@ class ExampleExtensionHooks {
 |$founded
 |-
 !Bild
-|[[File:$image|400px]]
+|$imagewiki
 |-
 !Ist ein
 |$instanceresult
@@ -88,9 +180,6 @@ class ExampleExtensionHooks {
 !Wikipedialink
 |https://de.wikipedia.org/wiki/$wikipedialink
 |}";
-
-#{{#display_map:Brandenburg Gate, Berlin, Germany}}";  
-        #$output = "param1 is $param1 and param2 is $param2 and param3 is $param3";
 		return $output;
    }
 }

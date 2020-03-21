@@ -10,10 +10,10 @@ This extension for mediawiki adds data to a wiki page based on a link set in the
 * Link to German wikipedia
 
 Example:
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/julianhocker/wikidatashow/master/example.png "Example of extension")
 
 ##Installation
-1. add 		"freearhey/wikidata": "3.2"   to your composer.json
+1. add "freearhey/wikidata": "3.2" to your composer.json
 2. composer update --no-dev
 3. clone this repo via git clone https://github.com/julianhocker/wikidatashow.git into extensions 
 4. Add wfLoadExtension('WikidataShow'); to your LocalSettings.php
