@@ -1,0 +1,24 @@
+{
+	"name": "WikidataShow",
+	"author": "Julian Hocker",
+	"version": "0.1",
+	"url": "https://github.com/julianhocker/wikidatashow",
+	"descriptionmsg": "desc",
+	"license-name": "MIT License",
+	"type": "parserhook",
+	"MessagesDirs": {
+		"WikidataShow": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"ExampleExtensionHooks": "src/ExampleExtensionHooks.php"
+	},
+	"ExtensionMessagesFiles": {
+		"ExampleExtensionMagic": "ExampleExtension.i18n.php"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": "ExampleExtensionHooks::onParserFirstCallInit"
+	},
+	"manifest_version": 1
+}

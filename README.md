@@ -2,6 +2,7 @@
 
 ##Installation
 add 		"freearhey/wikidata": "3.2"   to your composer.json
+
 composer ...
 git clone "mein repo" 
 wfLoadExtension('WikidataShow');
