@@ -1,6 +1,16 @@
 # Wikidata Show
 This extension for mediawiki adds data to a wiki page based on a link set in the Semantic MediaWiki and grabs data from wikidata. It is bascially developed for the project 'school archives' and handles the following information from wikidata. You can also use it as a blueprint to write your own extension to get data from wikidata. Supported items:
 * P18 (picture) 
+* P6375 (adress)
+* P856 (website)
+* P625 (coordinates)
+* P1448 (names)
+* P1249 (founding data)
+* P31 (instance of)
+* Link to German wikipedia
+
+Example:
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
 
 ##Installation
 1. add 		"freearhey/wikidata": "3.2"   to your composer.json
