@@ -4,9 +4,11 @@ class ExampleExtensionHooks {
    // Register any render callbacks with the parser
    public static function onParserFirstCallInit( Parser $parser ) {
 
-      // Create a function hook associating the "example" magic word with renderExample()
+      // Create a function hook associating the magic word with renderExample()
       $parser->setFunctionHook( 'wikidatashow', [ self::class, 'renderExample' ] );
    }
+
+
 
    // Render the output of {{#example:}}.
    public static function renderExample( Parser $parser, $param1 = '') {
@@ -54,55 +56,13 @@ class ExampleExtensionHooks {
 		
 		#get information
         #picture (p18)
-		try {
-            if (empty($properties['P18'] -> values[0] -> label)){
-                throw new Exception("not defined");
-            }else {
-                $image = $properties['P18'] -> values[0] -> label;
-          	    $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
-          	    $imagewiki = "[[File:$image|400px]]";
-            }
-        }
-        //catch exception
-        catch(Exception $e) {
-          $imagewiki = $e->getMessage();
-        }
-        #adress
-		try {
-            if (empty($properties['P6375'] -> values[0] -> label)){
-                throw new Exception("not defined");
-            }else {
-                $adress = $properties['P6375']-> values[0]-> label;
-            }
-        }
-        //catch exception
-        catch(Exception $e) {
-          $adress = $e->getMessage();
-        }
-        #website
-		try {
-            if (empty($properties['P856']-> values[0] -> label)){
-                throw new Exception("not defined");
-            }else {
-                $website = $properties['P856']-> values[0] -> label;
-            }
-        }
-        //catch exception
-        catch(Exception $e) {
-          $website = $e->getMessage();
-        }
-        #coordinates
-		try {
-            if (empty($properties['P625'] -> values[0] -> label)){
-                throw new Exception("not defined");
-            }else {
-                $coordinates = 	$properties['P625']-> values[0] -> label;
-            }
-        }
-        //catch exception
-        catch(Exception $e) {
-          $coordinates = $e->getMessage();
-        }
+        $image = self::getData($properties, $wikidataentry, "P18");
+        $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
+        $imagewiki = "[[File:$image|400px]]";
+
+        $adress = self::getData($properties, $wikidataentry, "P6375");
+        $website = self::getData($properties, $wikidataentry, "P856");
+        $coordinates = self::getData($properties, $wikidataentry, "P625");
         #names
 		try {
             if (empty($properties['P1448'] -> values[0] -> label)){
@@ -113,6 +73,7 @@ class ExampleExtensionHooks {
                 	foreach($names as $item) {
                 		$oldname = $item -> label;
                 		$nametime = $item -> qualifiers[0] -> value;
+                		$nametime = substr($nametime, 0, 4);
                 		$nameresult .= "\n# $oldname; $nametime";
                 	}
             }
@@ -121,19 +82,10 @@ class ExampleExtensionHooks {
         catch(Exception $e) {
           $nameresult = $e->getMessage();
         }
-        #founded
-        try {
-             if (empty($properties['P1249'] -> values[0] -> label)){
-                 throw new Exception("not defined");
-                    }else {
-                        $founded = $properties['P1249']-> values[0] -> label;
-                    }
-                }
-                //catch exception
-                catch(Exception $e) {
-                  $founded = $e->getMessage();
-                }
-         #instances
+
+        $founded = self::getData($properties, $wikidataentry, "P1249");
+        #$founded = substr($founded, 0, 4);
+        #instances
 		try {
             if (empty($properties['P31'] -> values[0] -> label)){
                 throw new Exception("not defined");
@@ -150,11 +102,6 @@ class ExampleExtensionHooks {
         catch(Exception $e) {
           $instanceresult = $e->getMessage();
         }
-
-
-
-
-
 
 		
 		#get links
@@ -173,7 +120,7 @@ class ExampleExtensionHooks {
         catch(Exception $e) {
           $wikipedialink = $e->getMessage();
         }
-
+        #$test = self::getData();
 		##make a pretty output of our results
         $output = "
 {| class='wikitable'
@@ -203,4 +150,18 @@ class ExampleExtensionHooks {
 |}";
 		return $output;
    }
+
+      public static function getData($properties = '', $wikidataentry = '', $pvalue = ''){#get data if you need only one information
+          try {
+              if (empty($properties[$pvalue] -> values[0] -> label)){
+                throw new Exception("not defined");
+              }else {
+                return $properties[$pvalue]-> values[0] -> label;
+              }
+          }
+          //catch exception
+          catch(Exception $e) {
+              return $e->getMessage();
+          }
+      }
 }
