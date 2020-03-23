@@ -57,9 +57,13 @@ class ExampleExtensionHooks {
 		#get information
         #picture (p18)
         $image = self::getData($properties, $wikidataentry, "P18");
-        $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
-        $imagewiki = "[[File:$image|400px]]";
 
+        if($image == "not defined"){
+            $imagewiki = "not defined";
+        }else{
+            $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
+            $imagewiki = "[[File:$image|400px]]";
+        }
         $adress = self::getData($properties, $wikidataentry, "P6375");
         $website = self::getData($properties, $wikidataentry, "P856");
         $coordinates = self::getData($properties, $wikidataentry, "P625");
