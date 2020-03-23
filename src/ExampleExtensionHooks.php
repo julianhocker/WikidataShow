@@ -28,7 +28,7 @@ class ExampleExtensionHooks {
 			        $wikidataentry = substr($wikidataentry, 30, 100);
                 }
             }
-                    //catch exception
+             //catch exception
             catch(Exception $e) {
                 $wikidataentry = "Q1533809";
             }
