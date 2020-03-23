@@ -17,14 +17,24 @@ class ExampleExtensionHooks {
 			##get wikidatalink from actual page	
 			$endpoint = "https://schularchive.bbf.dipf.de/api.php";
 			$url = "$endpoint?action=ask&query=[[$titleunderscores]]|?Wikidatalink|limit=5&format=json";
-			$json_data = file_get_contents($url);		
-			$apiresponse = json_decode($json_data, true);
-			$wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidatalink'][0];#get wikidatalink from api
-			$wikidataentry = substr($wikidataentry, 30, 100);
-			$control= "1";
+            $json_data = file_get_contents($url);
+            $apiresponse = json_decode($json_data, true);
+			#handling pages where wikidaalink is not defined:
+			try {
+                  if (empty($apiresponse['query']['results'][$title]['printouts']['Wikidatalink'][0])){
+                        throw new Exception("not defined");
+                }else {
+			        $wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidatalink'][0];#get wikidatalink from api
+			        $wikidataentry = substr($wikidataentry, 30, 100);
+                }
+            }
+                    //catch exception
+            catch(Exception $e) {
+                $wikidataentry = "Q1533809";
+            }
+
 		}else{
 			$wikidataentry = $param1;
-			$control = "2";
 		}
 		$wikidata = new Wikidata();#init object to get info from wikidata
 		$entity = $wikidata->get($wikidataentry,"de"); # get data for entitiy (with Q-number)
