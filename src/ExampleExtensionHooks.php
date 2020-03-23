@@ -7,7 +7,7 @@ class ExampleExtensionHooks {
       // Create a function hook associating the "example" magic word with renderExample()
       $parser->setFunctionHook( 'wikidatashow', [ self::class, 'renderExample' ] );
    }
-   
+
    // Render the output of {{#example:}}.
    public static function renderExample( Parser $parser, $param1 = '') {
 
@@ -30,15 +30,26 @@ class ExampleExtensionHooks {
             }
              //catch exception
             catch(Exception $e) {
-                $wikidataentry = "Q1533809";
+                return "No wikidata entry found";
             }
 
 		}else{
 			$wikidataentry = $param1;
 		}
 		$wikidata = new Wikidata();#init object to get info from wikidata
-		$entity = $wikidata->get($wikidataentry,"de"); # get data for entitiy (with Q-number)
-		$properties = $entity->properties->toArray(); #convert data to array to make handling easier		
+		#check if we get valid information from wikidata
+		try{
+		    if (empty ($wikidata->get($wikidataentry,"de"))){
+		        throw new Exception('not defined');
+		    }else{
+		        $entity = $wikidata->get($wikidataentry,"de"); # get data for entitiy (with Q-number)
+            	$properties = $entity->properties->toArray(); #convert data to array to make handling easier
+		    }
+		}
+		catch(Exception $e){
+		    return "wrong Wikidata ID";
+		}
+
 		#$result = $entity ->  label;
 		
 		#get information
