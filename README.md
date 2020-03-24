@@ -12,12 +12,12 @@ This extension for mediawiki adds data to a wiki page based on a link set in the
 Example:
 ![alt text](https://raw.githubusercontent.com/julianhocker/wikidatashow/master/example.png "Example of extension")
 
-##Installation
+## Installation
 1. add "freearhey/wikidata": "3.2" to your composer.json
 2. composer update --no-dev
 3. clone this repo via git clone https://github.com/julianhocker/wikidatashow.git into extensions 
 4. Add wfLoadExtension('WikidataShow'); to your LocalSettings.php
 
-##Usage
+## Usage
 * type the magic work {{wikidatashow:}} into a page and it will get the corresponding information based on the smw-item 'Wikidatalink'
 * you can also provide the wikidata-id directly, e.g. {{wikidatashow:}}
