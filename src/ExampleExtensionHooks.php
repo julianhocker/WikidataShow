@@ -107,6 +107,7 @@ class ExampleExtensionHooks {
           $instanceresult = $e->getMessage();
         }
 
+        $dnb = self::getData($properties, $wikidataentry, "P227");
 		
 		#get links
 		$url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
@@ -151,6 +152,9 @@ class ExampleExtensionHooks {
 |-
 !Wikipedialink
 |https://de.wikipedia.org/wiki/$wikipedialink
+|-
+!DNB-Link
+|https://d-nb.info/gnd/$dnb
 |}";
 		return $output;
    }
