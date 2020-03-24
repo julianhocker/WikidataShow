@@ -10,6 +10,7 @@ This extension for mediawiki adds data to a wiki page based on a link set in the
 * Link to German wikipedia
 
 Example:
+
 ![alt text](https://raw.githubusercontent.com/julianhocker/wikidatashow/master/example.png "Example of extension")
 
 ## Installation
