@@ -76,9 +76,8 @@ class ExampleExtensionHooks {
                 	$nameresult = "";
                 	foreach($names as $item) {
                 		$oldname = $item -> label;
-                		$nametime = $item -> qualifiers[0] -> value;
-                		$nametime = substr($nametime, 0, 4);
-                		$nameresult .= "\n# $oldname; $nametime";
+                		$nametime = date_parse($item -> qualifiers[0] -> value);
+                		$nameresult .= "\n# $oldname; $nametime[year]";
                 	}
             }
         }
@@ -87,8 +86,8 @@ class ExampleExtensionHooks {
           $nameresult = $e->getMessage();
         }
 
-        $founded = self::getData($properties, $wikidataentry, "P1249");
-        #$founded = substr($founded, 0, 4);
+        $founded = date_parse(self::getData($properties, $wikidataentry, "P1249"));
+
         #instances
 		try {
             if (empty($properties['P31'] -> values[0] -> label)){
@@ -111,7 +110,8 @@ class ExampleExtensionHooks {
 		if ($gnd == "not defined"){
 		    $gndlink = "not defined";
 		 } else {
-		    $gndlink = "https://d-nb.info/gnd/$gnd"}
+		    $gndlink = "https://d-nb.info/gnd/$gnd";
+		    }
 		#get links
 		$url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
         $json_data = file_get_contents($url);
@@ -145,7 +145,7 @@ class ExampleExtensionHooks {
 |$nameresult
 |-
 !Schulgründung
-|$founded
+|$founded[year]
 |-
 !Bild
 |$imagewiki
