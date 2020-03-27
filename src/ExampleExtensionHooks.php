@@ -108,7 +108,10 @@ class ExampleExtensionHooks {
         }
 
         $gnd = self::getData($properties, $wikidataentry, "P227");
-		
+		if ($gnd == "not defined"){
+		    $gndlink = "not defined";
+		 } else {
+		    $gndlink = "https://d-nb.info/gnd/$gnd"}
 		#get links
 		$url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
         $json_data = file_get_contents($url);
@@ -154,7 +157,7 @@ class ExampleExtensionHooks {
 |https://de.wikipedia.org/wiki/$wikipedialink
 |-
 !DNB-Link
-|https://d-nb.info/gnd/$gnd
+|$gndlink
 |}";
 		return $output;
    }
