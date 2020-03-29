@@ -12,13 +12,13 @@
 		]
 	},
 	"AutoloadClasses": {
-		"ExampleExtensionHooks": "src/ExampleExtensionHooks.php"
+		"WikidataShowHooks": "src/WikidatShowHooks.php"
 	},
 	"ExtensionMessagesFiles": {
-		"ExampleExtensionMagic": "ExampleExtension.i18n.php"
+		"WikidataShowMagic": "WikidataShow.i18n.php"
 	},
 	"Hooks": {
-		"ParserFirstCallInit": "ExampleExtensionHooks::onParserFirstCallInit"
+		"ParserFirstCallInit": "WikidataShowHooks::onParserFirstCallInit"
 	},
 	"manifest_version": 1
 }
