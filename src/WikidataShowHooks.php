@@ -8,8 +8,6 @@ class WikidataShowHooks {
       $parser->setFunctionHook( 'wikidatashow', [ self::class, 'renderExample' ] );
    }
 
-
-
    // Render the output of {{#example:}}.
    public static function renderExample( Parser $parser, $param1 = '') {
 
