@@ -12,6 +12,7 @@ class WikidataShowHooks {
 
    // Render the output of {{#example:}}.
    public static function renderExample( Parser $parser, $param1 = '') {
+        $path = $parser ->getTitle -> getFullURL();
 
 		if (empty($param1)){#check, if input is empty. If it is not, get wikidata-id from api
 			$title = $parser->getTitle()->getText();
@@ -158,7 +159,8 @@ class WikidataShowHooks {
 |-
 !DNB-Link
 |$gndlink
-|}";
+|}
+$path";
 		return $output;
    }
 
