@@ -21,10 +21,10 @@ class WikidataShowHooks {
             $apiresponse = json_decode($json_data, true);
 			#handling pages where wikidaalink is not defined:
 			try {
-                  if (empty($apiresponse['query']['results'][$title]['printouts']['Wikidatalink'][0])){
+                  if (empty($apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0])){
                         throw new Exception("not defined");
                 }else {
-			        $wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidatalink'][0];#get wikidatalink from api
+			        $wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0];#get wikidatalink from api
 			        $wikidataentry = substr($wikidataentry, 30, 100);
                 }
             }
