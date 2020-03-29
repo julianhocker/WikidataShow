@@ -27,3 +27,7 @@ Example:
 ## Dependencies
 
 The extension was tested on Semantic MediaWiki 3.1.5. and MediaWiki 1.34.0. You do not need Semantic MediaWiki to make it running, but then you have to provide the wikidata-ID directly. 
+
+## Known issues 
+* The extension should use a relative path to the wiki to make it more universal
+* there should be the standard attribute Wikidata ID used, instead of Wikidatalink
