@@ -12,7 +12,7 @@
 		]
 	},
 	"AutoloadClasses": {
-		"WikidataShowHooks": "src/WikidatShowHooks.php"
+		"WikidataShowHooks": "src/WikidataShowHooks.php"
 	},
 	"ExtensionMessagesFiles": {
 		"WikidataShowMagic": "WikidataShow.i18n.php"
