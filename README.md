@@ -8,7 +8,7 @@ This extension for mediawiki adds data to a wiki page based on a link set in the
 * P1249 (founding data)
 * P31 (instance of)
 * Link to German wikipedia
-* Link to DNB (German national library)
+* Link to GND (German national library)
 
 Example:
 
