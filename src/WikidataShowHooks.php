@@ -16,7 +16,7 @@ class WikidataShowHooks {
 			$titleunderscores = $parser->getTitle()->getDBKey();
 			##get wikidatalink from actual page	
 			$endpoint = "https://schularchive.bbf.dipf.de/api.php";
-			$url = "$endpoint?action=ask&query=[[$titleunderscores]]|?Wikidatalink|limit=5&format=json";
+			$url = "$endpoint?action=ask&query=[[$titleunderscores]]|?Wikidata_ID|limit=5&format=json";
             $json_data = file_get_contents($url);
             $apiresponse = json_decode($json_data, true);
 			#handling pages where wikidaalink is not defined:
@@ -25,7 +25,6 @@ class WikidataShowHooks {
                         throw new Exception("not defined");
                 }else {
 			        $wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0];#get wikidatalink from api
-			        $wikidataentry = substr($wikidataentry, 30, 100);
                 }
             }
              //catch exception
