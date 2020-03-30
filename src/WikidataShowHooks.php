@@ -127,12 +127,14 @@ class WikidataShowHooks {
         }
         #$test = self::getData();
 		##make a pretty output of our results
+		$websiteString = wfMessage( 'website')->plain();
+		$adressString = wfMessage( 'adress')->plain();
         $output = "
 {| class='wikitable'
-!Webseite
+!$websiteString
 |$website
 |-
-!Adresse
+!$adressString
 |$adress
 |-
 !Karte

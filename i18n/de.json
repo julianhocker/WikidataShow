@@ -3,5 +3,7 @@
 			"Julian Hocker"
 		]
 	},
-	"desc": "Diese Extension erlaubt das Anzeigen von Informationen aus Wikidata"
+	"desc": "Diese Extension erlaubt das Anzeigen von Informationen aus Wikidata",
+	"website": "Webseite",
+	"adress": "Adresse"
 }

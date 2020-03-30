@@ -3,5 +3,7 @@
 			"Julian Hocker"
 		]
 	},
-	"desc": "This extension shows data from wikidata"
+	"desc": "This extension shows data from wikidata",
+	"website": "Website",
+	"adress": "Adress"
 }
