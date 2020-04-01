@@ -10,7 +10,7 @@ class WikidataShowHooks {
 
    // Render the output of {{#example:}}.
    public static function renderExample( Parser $parser, $param1 = '') {
-        global $$wgStriptPath;
+        global $wgStriptPath;
         #$test = $wgStriptPath; not working #FIXME
 
         if (isset($$wgStriptPath)) {
