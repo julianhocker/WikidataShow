@@ -10,8 +10,11 @@ class WikidataShowHooks {
 
    // Render the output of {{#example:}}.
    public static function renderExample( Parser $parser, $param1 = '') {
-        global $wgScriptPath;
-
+        #global $wgScriptPath;
+        #global $wgServer;
+        #$test = $wgScriptPath;
+        $language = wfMessage( 'language')->plain();
+        $wikilanguage = $language ."wiki";
 		if (empty($param1)){#check, if input is empty. If it is not, get wikidata-id from api
 			$title = $parser->getTitle()->getText();
 			$titleunderscores = $parser->getTitle()->getDBKey();
@@ -39,10 +42,10 @@ class WikidataShowHooks {
 		$wikidata = new Wikidata();#init object to get info from wikidata
 		#check if we get valid information from wikidata
 		try{
-		    if (empty ($wikidata->get($wikidataentry,"de"))){
+		    if (empty ($wikidata->get($wikidataentry,$language))){
 		        throw new Exception('not defined');
 		    }else{
-		        $entity = $wikidata->get($wikidataentry,"de"); # get data for entitiy (with Q-number)
+		        $entity = $wikidata->get($wikidataentry,$language); # get data for entitiy (with Q-number)
             	$properties = $entity->properties->toArray(); #convert data to array to make handling easier
 		    }
 		}
@@ -115,10 +118,10 @@ class WikidataShowHooks {
         $json_data = file_get_contents($url);
         $apiresponse = json_decode($json_data, true);
 		try {
-            if (empty($apiresponse['entities'][$wikidataentry]['sitelinks']['dewiki']['title'])){
+            if (empty($apiresponse['entities'][$wikidataentry]['sitelinks'][$wikilanguage]['title'])){
                 throw new Exception("not defined");
             }else {
-                $wikipedialink = $apiresponse['entities'][$wikidataentry]['sitelinks']['dewiki']['title'];
+                $wikipedialink = $apiresponse['entities'][$wikidataentry]['sitelinks'][$wikilanguage]['title'];
                 $wikipedialink = str_replace(" ","_",$wikipedialink); #hack to make link pretty
             }
         }
@@ -130,6 +133,13 @@ class WikidataShowHooks {
 		##make a pretty output of our results
 		$websiteString = wfMessage( 'website')->plain();
 		$adressString = wfMessage( 'adress')->plain();
+		$mapString = wfMessage( 'map')->plain();
+		$namesString = wfMessage( 'names')->plain();
+		$foundedString = wfMessage( 'founded')->plain();
+		$imageString = wfMessage( 'image')->plain();
+		$instanceString = wfMessage( 'instance')->plain();
+		$wikipediaString = wfMessage( 'wikipedia')->plain();
+		$gndString = wfMessage( 'gndlink')->plain();
         $output = "
 {| class='wikitable'
 !$websiteString
@@ -138,27 +148,29 @@ class WikidataShowHooks {
 !$adressString
 |$adress
 |-
-!Karte
+!$mapString
 |$coordinates
 |-
-!Schulnamen
+!$namesString
 |$nameresult
 |-
-!Schulgründung
+!$foundedString
 |$founded[year]
 |-
-!Bild
+!$imageString
 |$imagewiki
 |-
-!Ist ein
+!$instanceString
 |$instanceresult
 |-
-!Wikipedialink
-|https://de.wikipedia.org/wiki/$wikipedialink
+!$wikipediaString
+|https://$language.wikipedia.org/wiki/$wikipedialink
 |-
-!DNB-Link
+!$gndString
 |$gndlink
-|}";
+|}"
+
+;
 		return $output;
    }
 

@@ -5,5 +5,13 @@
 	},
 	"desc": "This extension shows data from wikidata",
 	"website": "Website",
-	"adress": "Adress"
+	"adress": "Adress",
+	"gndlink": "GND link",
+	"image": "Image",
+	"instance": "Instance",
+	"founded": "Founded",
+	"names": "Names",
+	"wikipedia": "Wikipedia page",
+	"map": "map",
+	"language": "en"
 }

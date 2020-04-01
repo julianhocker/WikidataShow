@@ -5,5 +5,13 @@
 	},
 	"desc": "Diese Extension erlaubt das Anzeigen von Informationen aus Wikidata",
 	"website": "Webseite",
-	"adress": "Adresse"
+	"adress": "Adresse",
+	"gndlink": "DNB-Link",
+	"image": "Bild",
+	"instance": "Ist ein",
+	"founded": "Gegründet",
+	"names": "Namen",
+	"wikipedia": "Wikipedia-Seite",
+	"map": "Karte",
+	"language": "de"
 }
