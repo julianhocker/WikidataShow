@@ -10,6 +10,14 @@ class WikidataShowHooks {
 
    // Render the output of {{#example:}}.
    public static function renderExample( Parser $parser, $param1 = '') {
+        global $wgStriptPath;
+        #$test = $wgStriptPath; not working #FIXME
+
+        if (isset($wgStriptPath)) {
+            $test = "wgStriptPath is set";
+        } else {
+            $test = "wgStriptPath is not set";
+        }
 
         $language = wfMessage( 'language')->plain();
         $wikilanguage = $language ."wiki";
@@ -165,7 +173,9 @@ class WikidataShowHooks {
 |-
 !$gndString
 |$gndlink
-|}";
+|}
+
+$test";
 		return $output;
    }
 
