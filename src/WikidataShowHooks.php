@@ -10,9 +10,7 @@ class WikidataShowHooks {
 
    // Render the output of {{#example:}}.
    public static function renderExample( Parser $parser, $param1 = '') {
-        #global $wgScriptPath;
-        #global $wgServer;
-        #$test = $wgScriptPath;
+
         $language = wfMessage( 'language')->plain();
         $wikilanguage = $language ."wiki";
 		if (empty($param1)){#check, if input is empty. If it is not, get wikidata-id from api
@@ -129,8 +127,7 @@ class WikidataShowHooks {
         catch(Exception $e) {
           $wikipedialink = $e->getMessage();
         }
-        #$test = self::getData();
-		##make a pretty output of our results
+
 		$websiteString = wfMessage( 'website')->plain();
 		$adressString = wfMessage( 'adress')->plain();
 		$mapString = wfMessage( 'map')->plain();
@@ -168,9 +165,7 @@ class WikidataShowHooks {
 |-
 !$gndString
 |$gndlink
-|}"
-
-;
+|}";
 		return $output;
    }
 
