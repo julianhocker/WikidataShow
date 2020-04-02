@@ -167,9 +167,7 @@ class WikidataShowHooks {
 |-
 !$gndString
 |$gndlink
-|}
-
-$test";
+|}";
 		return $output;
    }
 
