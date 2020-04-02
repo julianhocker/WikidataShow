@@ -10,14 +10,8 @@ class WikidataShowHooks {
 
    // Render the output of {{#example:}}.
    public static function renderExample( Parser $parser, $param1 = '') {
-        global $wgStriptPath;
-        #$test = $wgStriptPath; not working #FIXME
-
-        if (isset($$wgStriptPath)) {
-            $test = "wgStriptPath is set";
-        } else {
-            $test = "wgStriptPath is not set";
-        }
+        global $wgScriptPath;
+        global $wgServer;
 
         $language = wfMessage( 'language')->plain();
         $wikilanguage = $language ."wiki";
@@ -25,7 +19,7 @@ class WikidataShowHooks {
 			$title = $parser->getTitle()->getText();
 			$titleunderscores = $parser->getTitle()->getDBKey();
 			##get wikidatalink from actual page	
-			$endpoint = "https://schularchive.bbf.dipf.de/api.php";
+			$endpoint = "$wgServer$wgScriptPath/api.php";
 			$url = "$endpoint?action=ask&query=[[$titleunderscores]]|?Wikidata_ID|limit=5&format=json";
             $json_data = file_get_contents($url);
             $apiresponse = json_decode($json_data, true);
