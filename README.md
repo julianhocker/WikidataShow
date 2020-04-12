@@ -15,9 +15,9 @@ Example:
 ![alt text](https://raw.githubusercontent.com/julianhocker/wikidatashow/master/example.png "Example of extension")
 
 ## Installation
-1. add "freearhey/wikidata": "3.2" to your composer.json in the section "require"
-2. composer update --no-dev
-3. clone this repo via git clone https://github.com/julianhocker/wikidatashow.git into extensions 
+1. Add "freearhey/wikidata": "3.2" to your composer.json of the wiki in the section "require"
+2. Run composer update --no-dev
+3. Clone this repo via git clone https://github.com/julianhocker/wikidatashow.git into extensions 
 4. Add wfLoadExtension('WikidataShow'); to your LocalSettings.php
 
 ## Usage
