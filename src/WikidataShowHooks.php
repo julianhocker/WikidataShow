@@ -226,7 +226,7 @@ class WikidataShowHooks {
 
         #get results depending on the input
         switch ($param1){
-            case "P18":
+            case "P18":#picture
                 $image = self::getData($properties, $wikidataentry, "P18");
                 if($image == "not defined"){
                     return "not defined";
@@ -234,23 +234,23 @@ class WikidataShowHooks {
                     $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
                     return "[[File:$image|400px]]";
                 }
-            case "P227":
+            case "P227":#gnd entry
                 $gnd = self::getData($properties, $wikidataentry, "P227");
                 if ($gnd == "not defined"){
                     return "not defined";
                 } else {
                     return "https://d-nb.info/gnd/$gnd";
                 }
-            case "wikipedia":
+            case "wikipedia":#wikipedia
                 $wikipedialink = self::getWikipediaLink($wikidataentry, $wikilanguage);
                 if ($wikipedialink == "not defined"){
                     return "not defined";
                 } else {
                     return "https://$language.wikipedia.org/wiki/$wikipedialink";
                 }
-             case "P856":
+             case "P856":#website
                  return self::getData($properties, $wikidataentry, "P856");
-             case "P6375":
+             case "P6375":#street adress
                 return self::getData($properties, $wikidataentry, "P6375");
             default:
                 return "not defined";
