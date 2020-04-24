@@ -6,6 +6,7 @@ class WikidataShowHooks {
 
       // Create a function hook associating the magic word with renderExample()
       $parser->setFunctionHook( 'wikidatashow', [ self::class, 'renderExample' ] );
+      $parser->setFunctionHook( 'wikidatashowlite', [ self::class, 'wikidatashowlite' ] );
    }
 
    // Render the output of {{#example:}}.
@@ -88,6 +89,7 @@ class WikidataShowHooks {
         }
 
         $founded = date_parse(self::getData($properties, $wikidataentry, "P1249"));
+        #todo: also use inception (P571) for this
 
         #instances
 		try {
@@ -112,7 +114,7 @@ class WikidataShowHooks {
 		    $gndlink = "not defined";
 		 } else {
 		    $gndlink = "https://d-nb.info/gnd/$gnd";
-		    }
+		}
 		#get links
 		$url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
         $json_data = file_get_contents($url);
@@ -169,6 +171,66 @@ class WikidataShowHooks {
 |$gndlink
 |}";
 		return $output;
+   }
+
+   public static function wikidatashowlite( Parser $parser, $param1 = '') {
+        global $wgScriptPath;
+        global $wgServer;
+        $language = wfMessage( 'language')->plain();
+        $wikilanguage = $language ."wiki";
+        $title = $parser->getTitle()->getText();
+        $titleunderscores = $parser->getTitle()->getDBKey();
+        ##get wikidatalink from actual page
+        $endpoint = "$wgServer$wgScriptPath/api.php";
+        $url = "$endpoint?action=ask&query=[[$titleunderscores]]|?Wikidata_ID|limit=5&format=json";
+        $json_data = file_get_contents($url);
+        $apiresponse = json_decode($json_data, true);
+        #handling pages where wikidaalink is not defined:
+        try {
+             if (empty($apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0])){
+                 throw new Exception("not defined");
+             }else {
+                $wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0];#get wikidatalink from api
+             }
+        }
+        //catch exception
+        catch(Exception $e) {
+            return "No wikidata entry found";
+        }
+        $wikidata = new Wikidata();#init object to get info from wikidata
+        #check if we get valid information from wikidata
+        try{
+            if (empty ($wikidata->get($wikidataentry,$language))){
+                throw new Exception('not defined');
+        		    }else{
+        		        $entity = $wikidata->get($wikidataentry,$language); # get data for entitiy (with Q-number)
+                    	$properties = $entity->properties->toArray(); #convert data to array to make handling easier
+        		    }
+        		}
+        		catch(Exception $e){
+        		    return "wrong Wikidata ID";
+        		}
+
+        		#$result = $entity ->  label;
+        switch ($param1){
+            case "P18":
+                $image = self::getData($properties, $wikidataentry, "P18");
+                if($image == "not defined"){
+                    return "not defined";
+                }else{
+                    $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
+                    return "[[File:$image|400px]]";
+                }
+            case "P227":
+                $gnd = self::getData($properties, $wikidataentry, "P227");
+                if ($gnd == "not defined"){
+                    return "not defined";
+                } else {
+                    return "https://d-nb.info/gnd/$gnd";
+                }
+            default:
+                return "not defined";
+        }
    }
 
       public static function getData($properties = '', $wikidataentry = '', $pvalue = ''){#get data if you need only one information
