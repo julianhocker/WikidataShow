@@ -89,7 +89,25 @@ class WikidataShowHooks {
         }
 
         $founded = date_parse(self::getData($properties, $wikidataentry, "P1249"));
-        #todo: also use inception (P571) for this
+        #$founded = $founded .date_parse(self::getData($properties, $wikidataentry, "P571"));
+
+        #operator
+        try {
+            if (empty($properties['P137'] -> values[0] -> label)){
+                throw new Exception("not defined");
+            }else {
+               	$operators = $properties['P137']-> values;
+               	$operatorresult = "";
+               	foreach($operators as $item) {
+               		$operator = $item -> label;
+               		$operatorresult .= "\n# $operator";
+               	}
+            }
+        }
+        //catch exception
+        catch(Exception $e) {
+          $operatorresult = $e->getMessage();
+        }
 
         #instances
 		try {
@@ -115,21 +133,12 @@ class WikidataShowHooks {
 		 } else {
 		    $gndlink = "https://d-nb.info/gnd/$gnd";
 		}
-		#get links
-		$url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
-        $json_data = file_get_contents($url);
-        $apiresponse = json_decode($json_data, true);
-		try {
-            if (empty($apiresponse['entities'][$wikidataentry]['sitelinks'][$wikilanguage]['title'])){
-                throw new Exception("not defined");
-            }else {
-                $wikipedialink = $apiresponse['entities'][$wikidataentry]['sitelinks'][$wikilanguage]['title'];
-                $wikipedialink = str_replace(" ","_",$wikipedialink); #hack to make link pretty
-            }
-        }
-        //catch exception
-        catch(Exception $e) {
-          $wikipedialink = $e->getMessage();
+		#get wikipedialink
+		$wikipedialink = self::getWikipediaLink($wikidataentry, $wikilanguage);
+		if ($wikipedialink == "not defined"){
+            $wikipedialink =  "not defined";
+        } else {
+            $wikipedialink = "https://$language.wikipedia.org/wiki/$wikipedialink";
         }
 
 		$websiteString = wfMessage( 'website')->plain();
@@ -141,6 +150,7 @@ class WikidataShowHooks {
 		$instanceString = wfMessage( 'instance')->plain();
 		$wikipediaString = wfMessage( 'wikipedia')->plain();
 		$gndString = wfMessage( 'gndlink')->plain();
+		$operatorSring = wfMessage('operator')->plain();
         $output = "
 {| class='wikitable'
 !$websiteString
@@ -164,8 +174,11 @@ class WikidataShowHooks {
 !$instanceString
 |$instanceresult
 |-
+!$operatorSring
+|$operatorresult
+|-
 !$wikipediaString
-|https://$language.wikipedia.org/wiki/$wikipedialink
+|$wikipedialink
 |-
 !$gndString
 |$gndlink
@@ -211,7 +224,7 @@ class WikidataShowHooks {
         		    return "wrong Wikidata ID";
         		}
 
-        		#$result = $entity ->  label;
+        #get results depending on the input
         switch ($param1){
             case "P18":
                 $image = self::getData($properties, $wikidataentry, "P18");
@@ -228,6 +241,15 @@ class WikidataShowHooks {
                 } else {
                     return "https://d-nb.info/gnd/$gnd";
                 }
+            case "wikipedia":
+                $wikipedialink = self::getWikipediaLink($wikidataentry, $wikilanguage);
+                if ($wikipedialink == "not defined"){
+                    return "not defined";
+                } else {
+                    return "https://$language.wikipedia.org/wiki/$wikipedialink";
+                }
+             case "P856":
+                 return self::getData($properties, $wikidataentry, "P856");
             default:
                 return "not defined";
         }
@@ -245,5 +267,25 @@ class WikidataShowHooks {
           catch(Exception $e) {
               return $e->getMessage();
           }
+      }
+
+      public static function getWikipediaLink($wikidataentry = "", $wikilanguage = ""){
+            $url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
+            $json_data = file_get_contents($url);
+            $apiresponse = json_decode($json_data, true);
+      		try {
+                  if (empty($apiresponse['entities'][$wikidataentry]['sitelinks'][$wikilanguage]['title'])){
+                      throw new Exception("not defined");
+                  }else {
+                      $wikipedialink = $apiresponse['entities'][$wikidataentry]['sitelinks'][$wikilanguage]['title'];
+                      $wikipedialink = str_replace(" ","_",$wikipedialink); #hack to make link pretty
+
+                      return $wikipedialink;
+                  }
+            }
+            //catch exception
+            catch(Exception $e) {
+                return $e->getMessage();
+            }
       }
 }

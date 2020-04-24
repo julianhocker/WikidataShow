@@ -13,5 +13,6 @@
 	"names": "Names",
 	"wikipedia": "Wikipedia page",
 	"map": "Map",
-	"language": "en"
+	"language": "en",
+	"operator": "operator"
 }
