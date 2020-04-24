@@ -250,6 +250,8 @@ class WikidataShowHooks {
                 }
              case "P856":
                  return self::getData($properties, $wikidataentry, "P856");
+             case "P6375":
+                return self::getData($properties, $wikidataentry, "P6375");
             default:
                 return "not defined";
         }

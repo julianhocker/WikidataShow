@@ -7,7 +7,7 @@ This extension for mediawiki adds data to a wiki page based on a link set in the
 * P1448 (names)
 * P1249 (founding data)
 * P31 (instance of)
-* Link to German wikipedia
+* Link to wikipedia
 * Link to GND (German national library)
 
 Example:
@@ -21,13 +21,19 @@ Example:
 4. Add wfLoadExtension('WikidataShow'); to your LocalSettings.php
 
 ## Usage
-* type the magic work {{#wikidatashow:}} into a page and it will get the corresponding information based on the smw-item 'Wikidatalink'
+### Wikidatashow
+This way you get a box with all the data defined above directly from wikidata
+* type the magic work {{#wikidatashow:}} into a page and it will get the corresponding information based on the smw-attribute 'Wikidata ID'
 * you can also provide the wikidata-id directly, e.g. {{#wikidatashow:Q1533809}}
 
+###Wikidatashotlite
+This way you only get single items from wikidata. This function is provided for links to wikipedia, image, adress, website, link to GND
+* type the magic word {{#wikidatashowlite:}} to a page, giving the p-value of the information you need or 'wikipedia', e.g. {{#wikidatashowlite:P18}} to get the corresponding image. 
+
+This function only works if you have semantic Mediawiki installed and provide the wikidata ID in the page
 ## Dependencies
 
 The extension was tested on Semantic MediaWiki 3.1.5. and MediaWiki 1.34.0. You do not need Semantic MediaWiki to make it running, but then you have to provide the wikidata-ID directly. 
 
 ## Known issues 
-* The extension should use a relative path to the wiki to make it more universal
-* Translation
+*Please open issues if you encounter problems 
