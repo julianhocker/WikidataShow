@@ -218,17 +218,34 @@ class WikidataShowHooks {
                 } else {
                     return "https://$language.wikipedia.org/wiki/$wikipedialink";
                 }
-             case "P856":#website
+            case "P856"://website
                  return self::getData($properties, "P856");
-             case "P6375":#street adress
+            case "P6375"://street adress
                 return self::getData($properties, "P6375");
-             case "P31": #instances
+            case "P31": //instances
                 return self::getMultipleData($properties, "P31");
-             case "P137":#operator
+            case "P137"://operator
                 return self::getMultipleData($properties, "P137");
-             case "P1249": #earliestRecord
+            case "P1249": //earliestRecord
                 return date_parse(self::getData($properties, "P1249"))[year];
-             case "P571": #inception
+            case "P571": //inception
+                ##test
+                /*$url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
+                $json_data = file_get_contents($url);
+                $apiresponse = json_decode($json_data, true);
+                try {
+                    if (empty($apiresponse['claims']["P571"][0]['mainsnack']['datavalue']['value']['time'])){
+                        throw new Exception("not defined");
+                    }else {
+                        $wikipedialink = $apiresponse['claims']["P571"][0]['mainsnack']['datavalue']['value']['time'];
+                        #$wikipedialink = str_replace(" ","_",$wikipedialink); #hack to make link pretty
+                        return $wikipedialink;
+                    }
+                }
+                //catch exception
+                catch(Exception $e) {
+                    return $e->getMessage();
+                }*/
                 return self::getData($properties, "P571");
             default:
                 return "not defined";
@@ -252,7 +269,7 @@ class WikidataShowHooks {
                     if (empty($apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0])){
                         throw new Exception("not defined");
                     }else {
-                       $wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0];#get wikidatalink from api
+                       $wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0];//get wikidatalink from api
                     }
                }
                //catch exception
@@ -260,13 +277,13 @@ class WikidataShowHooks {
                    return "No wikidata entry found";
                }
                $wikidata = new Wikidata();#init object to get info from wikidata
-               #check if we get valid information from wikidata
+               //check if we get valid information from wikidata
                try{
                    if (empty ($wikidata->get($wikidataentry,$language))){
                        throw new Exception('not defined');
                		    }else{
-               		        $entity = $wikidata->get($wikidataentry,$language); # get data for entitiy (with Q-number)
-                           	$properties = $entity->properties->toArray(); #convert data to array to make handling easier
+               		        $entity = $wikidata->get($wikidataentry,$language); //get data for entitiy (with Q-number)
+                           	$properties = $entity->properties->toArray(); //convert data to array to make handling easier
                		    }
                		}
                		catch(Exception $e){
