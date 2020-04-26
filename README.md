@@ -44,3 +44,5 @@ The extension was tested on Semantic MediaWiki 3.1.5. and MediaWiki 1.34.0. You 
 ## Known issues 
 * Please open issues if you encounter problems 
 * connection to wikidata should be done more nicely in the code
+* wikidatashowlite only works with SMW, could be extended to work without SMW, just like wikidatashow
+* I also added the magic word wikidatashoweasy, that just returns the value from wikidata. It seemed handy at first, but I did not see great usage since many values are not proper formatted/usefull in wikidata
