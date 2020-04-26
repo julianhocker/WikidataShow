@@ -36,7 +36,6 @@ class WikidataShowHooks {
             catch(Exception $e) {
                 return "No wikidata entry found";
             }
-
 		}else{
 			$wikidataentry = $param1;
 		}
@@ -58,7 +57,7 @@ class WikidataShowHooks {
 		
 		#get information
         #picture (p18)
-        $image = self::getData($properties, $wikidataentry, "P18");
+        $image = self::getData($properties, "P18");
 
         if($image == "not defined"){
             $imagewiki = "not defined";
@@ -66,9 +65,9 @@ class WikidataShowHooks {
             $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
             $imagewiki = "[[File:$image|400px]]";
         }
-        $adress = self::getData($properties, $wikidataentry, "P6375");
-        $website = self::getData($properties, $wikidataentry, "P856");
-        $coordinates = self::getData($properties, $wikidataentry, "P625");
+        $adress = self::getData($properties, "P6375");
+        $website = self::getData($properties, "P856");
+        $coordinates = self::getData($properties, "P625");
         #names
 		try {
             if (empty($properties['P1448'] -> values[0] -> label)){
@@ -88,7 +87,7 @@ class WikidataShowHooks {
           $nameresult = $e->getMessage();
         }
 
-        $founded = date_parse(self::getData($properties, $wikidataentry, "P1249"));
+        $founded = date_parse(self::getData($properties, "P1249"));
         #$founded = $founded .date_parse(self::getData($properties, $wikidataentry, "P571"));
 
         #operator
@@ -127,7 +126,7 @@ class WikidataShowHooks {
           $instanceresult = $e->getMessage();
         }
 
-        $gnd = self::getData($properties, $wikidataentry, "P227");
+        $gnd = self::getData($properties, "P227");
 		if ($gnd == "not defined"){
 		    $gndlink = "not defined";
 		 } else {
@@ -227,7 +226,7 @@ class WikidataShowHooks {
         #get results depending on the input
         switch ($param1){
             case "P18":#picture
-                $image = self::getData($properties, $wikidataentry, "P18");
+                $image = self::getData($properties, "P18");
                 if($image == "not defined"){
                     return "not defined";
                 }else{
@@ -235,7 +234,7 @@ class WikidataShowHooks {
                     return "[[File:$image|400px]]";
                 }
             case "P227":#gnd entry
-                $gnd = self::getData($properties, $wikidataentry, "P227");
+                $gnd = self::getData($properties, "P227");
                 if ($gnd == "not defined"){
                     return "not defined";
                 } else {
@@ -249,15 +248,15 @@ class WikidataShowHooks {
                     return "https://$language.wikipedia.org/wiki/$wikipedialink";
                 }
              case "P856":#website
-                 return self::getData($properties, $wikidataentry, "P856");
+                 return self::getData($properties, "P856");
              case "P6375":#street adress
-                return self::getData($properties, $wikidataentry, "P6375");
+                return self::getData($properties, "P6375");
             default:
                 return "not defined";
         }
    }
 
-      public static function getData($properties = '', $wikidataentry = '', $pvalue = ''){#get data if you need only one information
+      public static function getData($properties = '', $pvalue = ''){#get data if you need only one information
           try {
               if (empty($properties[$pvalue] -> values[0] -> label)){
                 throw new Exception("not defined");
@@ -268,6 +267,25 @@ class WikidataShowHooks {
           //catch exception
           catch(Exception $e) {
               return $e->getMessage();
+          }
+      }
+
+      public static function getMultipleData(){#get data with multiple fields
+          try {
+              if (empty($properties['P31'] -> values[0] -> label)){
+                  throw new Exception("not defined");
+              }else {
+                  $instances = $properties['P31']-> values;
+                  $instanceresult = "";
+                  foreach($instances as $item) {
+                      $instance = $item -> label;
+                      $instanceresult .= "\n# $instance";
+                      }
+                  }
+              }
+          //catch exception
+          catch(Exception $e) {
+              $instanceresult = $e->getMessage();
           }
       }
 
