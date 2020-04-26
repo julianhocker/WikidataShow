@@ -12,6 +12,7 @@ $magicWords = [];
 $magicWords['en'] = [
    'wikidatashow' => [ 0, 'wikidatashow' ],
    'wikidatashowlite' => [ 0, 'wikidatashowlite' ],
+   'wikidatashoweasy' => [ 0, 'wikidatashoweasy' ],
 ];
 
 /** German
@@ -20,4 +21,5 @@ $magicWords['en'] = [
 $magicWords['de'] = [
    'wikidatashow' => [ 0, 'wikidatashow' ],
    'wikidatashowlite' => [ 0, 'wikidatashowlite' ],
+   'wikidatashoweasy' => [ 0, 'wikidatashoweasy' ],
 ];

@@ -7,6 +7,7 @@ class WikidataShowHooks {
       // Create a function hook associating the magic word with renderExample()
       $parser->setFunctionHook( 'wikidatashow', [ self::class, 'renderExample' ] );
       $parser->setFunctionHook( 'wikidatashowlite', [ self::class, 'wikidatashowlite' ] );
+      $parser->setFunctionHook( 'wikidatashoweasy', [ self::class, 'wikidatashoweasy' ] );
    }
 
    // Render the output of {{#example:}}.
@@ -87,44 +88,14 @@ class WikidataShowHooks {
           $nameresult = $e->getMessage();
         }
 
-        $founded = date_parse(self::getData($properties, "P1249"));
-        #$founded = $founded .date_parse(self::getData($properties, $wikidataentry, "P571"));
+        $earliestRecord = date_parse(self::getData($properties, "P1249"));
+        $inception =  self::getData($properties, "P571");
 
         #operator
-        try {
-            if (empty($properties['P137'] -> values[0] -> label)){
-                throw new Exception("not defined");
-            }else {
-               	$operators = $properties['P137']-> values;
-               	$operatorresult = "";
-               	foreach($operators as $item) {
-               		$operator = $item -> label;
-               		$operatorresult .= "\n# $operator";
-               	}
-            }
-        }
-        //catch exception
-        catch(Exception $e) {
-          $operatorresult = $e->getMessage();
-        }
+        $operatorResult = self::getMultipleData($properties, "P137");
 
         #instances
-		try {
-            if (empty($properties['P31'] -> values[0] -> label)){
-                throw new Exception("not defined");
-            }else {
-                	$instances = $properties['P31']-> values;
-                	$instanceresult = "";
-                	foreach($instances as $item) {
-                		$instance = $item -> label;
-                		$instanceresult .= "\n# $instance";
-                	}
-            }
-        }
-        //catch exception
-        catch(Exception $e) {
-          $instanceresult = $e->getMessage();
-        }
+        $instanceResult = self::getMultipleData($properties, "P31");
 
         $gnd = self::getData($properties, "P227");
 		if ($gnd == "not defined"){
@@ -165,16 +136,16 @@ class WikidataShowHooks {
 |$nameresult
 |-
 !$foundedString
-|$founded[year]
+|$earliestRecord[year], $inception
 |-
 !$imageString
 |$imagewiki
 |-
 !$instanceString
-|$instanceresult
+|$instanceResult
 |-
 !$operatorSring
-|$operatorresult
+|$operatorResult
 |-
 !$wikipediaString
 |$wikipedialink
@@ -251,12 +222,60 @@ class WikidataShowHooks {
                  return self::getData($properties, "P856");
              case "P6375":#street adress
                 return self::getData($properties, "P6375");
+             case "P31": #instances
+                return self::getMultipleData($properties, "P31");
+             case "P137":#operator
+                return self::getMultipleData($properties, "P137");
+             case "P1249": #earliestRecord
+                return date_parse(self::getData($properties, "P1249"))[year];
+             case "P571": #inception
+                return self::getData($properties, "P571");
             default:
                 return "not defined";
         }
    }
 
-      public static function getData($properties = '', $pvalue = ''){#get data if you need only one information
+   public static function wikidatashoweasy(Parser $parser, $param1 = ''){
+               global $wgScriptPath;
+               global $wgServer;
+               $language = wfMessage( 'language')->plain();
+               $wikilanguage = $language ."wiki";
+               $title = $parser->getTitle()->getText();
+               $titleunderscores = $parser->getTitle()->getDBKey();
+               ##get wikidatalink from actual page
+               $endpoint = "$wgServer$wgScriptPath/api.php";
+               $url = "$endpoint?action=ask&query=[[$titleunderscores]]|?Wikidata_ID|limit=5&format=json";
+               $json_data = file_get_contents($url);
+               $apiresponse = json_decode($json_data, true);
+               #handling pages where wikidaalink is not defined:
+               try {
+                    if (empty($apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0])){
+                        throw new Exception("not defined");
+                    }else {
+                       $wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0];#get wikidatalink from api
+                    }
+               }
+               //catch exception
+               catch(Exception $e) {
+                   return "No wikidata entry found";
+               }
+               $wikidata = new Wikidata();#init object to get info from wikidata
+               #check if we get valid information from wikidata
+               try{
+                   if (empty ($wikidata->get($wikidataentry,$language))){
+                       throw new Exception('not defined');
+               		    }else{
+               		        $entity = $wikidata->get($wikidataentry,$language); # get data for entitiy (with Q-number)
+                           	$properties = $entity->properties->toArray(); #convert data to array to make handling easier
+               		    }
+               		}
+               		catch(Exception $e){
+               		    return "wrong Wikidata ID";
+               		}
+       return self::getData($properties, $param1);
+   }
+
+      public static function getData($properties = '', $pvalue = ''){#get data if p-value only has one value
           try {
               if (empty($properties[$pvalue] -> values[0] -> label)){
                 throw new Exception("not defined");
@@ -270,22 +289,23 @@ class WikidataShowHooks {
           }
       }
 
-      public static function getMultipleData(){#get data with multiple fields
+      public static function getMultipleData($properties = '', $pvalue = ''){#get data if p-value has multiple values
           try {
-              if (empty($properties['P31'] -> values[0] -> label)){
+              if (empty($properties[$pvalue] -> values[0] -> label)){
                   throw new Exception("not defined");
               }else {
-                  $instances = $properties['P31']-> values;
-                  $instanceresult = "";
+                  $instances = $properties[$pvalue]-> values;
+                  $instanceResult = "";
                   foreach($instances as $item) {
                       $instance = $item -> label;
-                      $instanceresult .= "\n# $instance";
+                      $instanceResult .= "\n# $instance";
                       }
+                  return $instanceResult;
                   }
               }
           //catch exception
           catch(Exception $e) {
-              $instanceresult = $e->getMessage();
+              return $e->getMessage();
           }
       }
 
