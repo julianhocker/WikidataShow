@@ -35,14 +35,13 @@ This way you get a box with all the data defined above directly from wikidata
 ###Wikidatashotlite
 This way you only get single items from wikidata. This function is provided for links to wikipedia, image, adress, website, link to GND
 * type the magic word {{#wikidatashowlite:}} to a page, giving the p-value of the information you need or 'wikipedia', e.g. {{#wikidatashowlite:P18}} to get the corresponding image. 
+* if you do not have Semantic Mediawiki running, just provide the wikidata ID as second paramenter to get the data: 
+{{#wikidatashowlite:P227|Q1533809}}
 
-This function only works if you have Semantic Mediawiki installed and provide the wikidata ID in the page
 ## Dependencies
-
 The extension was tested on Semantic MediaWiki 3.1.5. and MediaWiki 1.34.0. You do not need Semantic MediaWiki to make it running, but then you have to provide the wikidata-ID directly.  Translation is right now done in English and German, please feel free to add more translation ;). 
 
 ## Known issues 
 * Please open issues if you encounter problems 
 * connection to wikidata should be done more nicely in the code
-* wikidatashowlite only works with SMW, could be extended to work without SMW, just like wikidatashow
 * I also added the magic word wikidatashoweasy, that just returns the value from wikidata. It seemed handy at first, but I did not see great usage since many values are not proper formatted/usefull in wikidata

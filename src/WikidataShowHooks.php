@@ -89,7 +89,7 @@ class WikidataShowHooks {
         }
 
         $earliestRecord = date_parse(self::getData($properties, "P1249"));
-        $inception =  self::getData($properties, "P571");
+        $inception =  date_parse(self::getData($properties, "P571"))['year'];
 
         #operator
         $operatorResult = self::getMultipleData($properties, "P137");
@@ -156,7 +156,7 @@ class WikidataShowHooks {
 		return $output;
    }
 
-   public static function wikidatashowlite( Parser $parser, $param1 = '') {
+   public static function wikidatashowlite( Parser $parser, $param1 = '', $param2 = '') {
         global $wgScriptPath;
         global $wgServer;
         $language = wfMessage( 'language')->plain();
@@ -164,35 +164,39 @@ class WikidataShowHooks {
         $title = $parser->getTitle()->getText();
         $titleunderscores = $parser->getTitle()->getDBKey();
         ##get wikidatalink from actual page
-        $endpoint = "$wgServer$wgScriptPath/api.php";
-        $url = "$endpoint?action=ask&query=[[$titleunderscores]]|?Wikidata_ID|limit=5&format=json";
-        $json_data = file_get_contents($url);
-        $apiresponse = json_decode($json_data, true);
-        #handling pages where wikidaalink is not defined:
-        try {
-             if (empty($apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0])){
-                 throw new Exception("not defined");
-             }else {
-                $wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0];#get wikidatalink from api
-             }
+        if(empty($param2)){#if param2 is not set, take the wikidatalink from the actual page
+            $endpoint = "$wgServer$wgScriptPath/api.php";
+            $url = "$endpoint?action=ask&query=[[$titleunderscores]]|?Wikidata_ID|limit=5&format=json";
+            $json_data = file_get_contents($url);
+            $apiresponse = json_decode($json_data, true);
+            try {
+                 if (empty($apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0])){
+                     throw new Exception("not defined");
+                 }else {
+                     $wikidataentry = $apiresponse['query']['results'][$title]['printouts']['Wikidata ID'][0];#get wikidatalink from api
+                 }
+            }
+            //catch exception
+            catch(Exception $e) {
+                return "No wikidata entry found";
+            }
+        } else {
+            $wikidataentry = $param2;
         }
-        //catch exception
-        catch(Exception $e) {
-            return "No wikidata entry found";
-        }
+
         $wikidata = new Wikidata();#init object to get info from wikidata
         #check if we get valid information from wikidata
         try{
             if (empty ($wikidata->get($wikidataentry,$language))){
                 throw new Exception('not defined');
-        		    }else{
-        		        $entity = $wikidata->get($wikidataentry,$language); # get data for entitiy (with Q-number)
-                    	$properties = $entity->properties->toArray(); #convert data to array to make handling easier
-        		    }
-        		}
-        		catch(Exception $e){
-        		    return "wrong Wikidata ID";
-        		}
+            }else{
+                $entity = $wikidata->get($wikidataentry,$language); # get data for entitiy (with Q-number)
+               	$properties = $entity->properties->toArray(); #convert data to array to make handling easier
+        	}
+        }
+        catch(Exception $e){
+            return "wrong Wikidata ID";
+        }
 
         #get results depending on the input
         switch ($param1){
@@ -227,25 +231,8 @@ class WikidataShowHooks {
             case "P137"://operator
                 return self::getMultipleData($properties, "P137");
             case "P1249": //earliestRecord
-                return date_parse(self::getData($properties, "P1249"))[year];
+                return date_parse(self::getData($properties, "P1249"))['year'];
             case "P571": //inception
-                ##test
-                /*$url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
-                $json_data = file_get_contents($url);
-                $apiresponse = json_decode($json_data, true);
-                try {
-                    if (empty($apiresponse['claims']["P571"][0]['mainsnack']['datavalue']['value']['time'])){
-                        throw new Exception("not defined");
-                    }else {
-                        $wikipedialink = $apiresponse['claims']["P571"][0]['mainsnack']['datavalue']['value']['time'];
-                        #$wikipedialink = str_replace(" ","_",$wikipedialink); #hack to make link pretty
-                        return $wikipedialink;
-                    }
-                }
-                //catch exception
-                catch(Exception $e) {
-                    return $e->getMessage();
-                }*/
                 return self::getData($properties, "P571");
             default:
                 return "not defined";
