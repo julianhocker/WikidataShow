@@ -233,7 +233,7 @@ class WikidataShowHooks {
             case "P1249": //earliestRecord
                 return date_parse(self::getData($properties, "P1249"))['year'];
             case "P571": //inception
-                return self::getData($properties, "P571");
+                return date_parse(self::getData($properties, "P571"))['year'];
             default:
                 return "not defined";
         }
