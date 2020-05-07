@@ -15,7 +15,7 @@ This extension for mediawiki adds data to a wiki page based on a link set in the
 The extension adds two magic words to your mediawiki:
 * wikidatashow: creates a box like to one in the example
 * wikidatashowlite: takes in the p-value you want to show and only shows this information (fits great if you want to display local data from semantic mediawiki together with data from wikidata)
-
+* wikidatashoweasy: does the same as wikidatashowlite, but gives back the raw result without any formatting. If you type {{#wikidatashowlite:P18, Q1533809}}, you get: https://d-nb.info/gnd/2012843-5if you type {{#wikidatashowwasy:P18, Q1533809}}, you get: 2012843-5. wikidatashoweasy can be used with all p-values, wikidatashowlite only with p-values pre-defined above.
 Example:
 
 ![alt text](https://raw.githubusercontent.com/julianhocker/wikidatashow/master/example.png "Example of extension")
