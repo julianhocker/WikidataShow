@@ -14,5 +14,6 @@
 	"wikipedia": "Wikipedia page",
 	"map": "Map",
 	"language": "en",
-	"operator": "operator"
+	"operator": "operator",
+	"unknown": "Not defined"
 }

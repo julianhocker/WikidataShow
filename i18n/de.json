@@ -14,5 +14,6 @@
 	"wikipedia": "Wikipedia-Seite",
 	"map": "Karte",
 	"language": "de",
-	"operator": "Betreiber"
+	"operator": "Betreiber",
+	"unknown": "Nicht definiert"
 }
