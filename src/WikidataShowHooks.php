@@ -203,7 +203,7 @@ class WikidataShowHooks {
             case "P18":#picture
                 $image = self::getData($properties, "P18");
                 if($image == "not defined"){
-                    return wfMessage( 'unknown')->plain();
+                    return wfMessage('unknown')->plain();
                 }else{
                     $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
                     return "[[File:$image|400px]]";
@@ -234,6 +234,18 @@ class WikidataShowHooks {
                 return date_parse(self::getData($properties, "P1249"))['year'];
             case "P571": //inception
                 return date_parse(self::getData($properties, "P571"))['year'];
+            case "P569": //year of birth
+                return date_parse(self::getData($properties, "P569"))['year'];
+            case "P570": //year of death
+                return date_parse(self::getData($properties, "P570"))['year'];
+            case "P937"://work location
+                return self::getMultipleData($properties, "P937");
+            case "P106"://occupation
+                return self::getMultipleData($properties, "P106");
+            case "P108"://employer
+                return self::getMultipleData($properties, "P108");
+            case "P1066"://student of
+                return self::getMultipleData($properties, "P1066");
             default:
                 return "not defined";
         }

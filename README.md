@@ -1,21 +1,27 @@
 # Wikidata Show
 This extension for mediawiki adds data to a wiki page based on a link set in the Semantic MediaWiki and grabs data from wikidata. It is bascially developed for the project [school archives](https://schularchive.bbf.dipf.de) and handles the following information from wikidata. You can also use it as a blueprint to write your own extension to get data from wikidata. Supported items:
-* P18 (picture) 
-* P6375 (adress)
-* P856 (website)
-* P625 (coordinates)
-* P1448 (names)
-* P1249 (earliest written record)
-* P571 (inception)
-* P31 (instance of)
-* P137 (operator)
+* P18: picture 
+* P6375: adress
+* P856: website
+* P625: coordinates
+* P1448: names
+* P1249: earliest written record
+* P571: inception
+* P31: instance of
+* P137: operator
 * Link to wikipedia
 * P227: Link to GND (German national library)
+* P569: year of birth
+* P570: year of death
+* P937: work location
+* P106: occupation
+* P108: employer
+* P1066: student of
 
-The extension adds two magic words to your mediawiki:
-* wikidatashow: creates a box like to one in the example
-* wikidatashowlite: takes in the p-value you want to show and only shows this information (fits great if you want to display local data from semantic mediawiki together with data from wikidata)
-* wikidatashoweasy: does the same as wikidatashowlite, but gives back the raw result without any formatting. If you type {{#wikidatashowlite:P18, Q1533809}}, you get: https://d-nb.info/gnd/2012843-5if you type {{#wikidatashowwasy:P18, Q1533809}}, you get: 2012843-5. wikidatashoweasy can be used with all p-values, wikidatashowlite only with p-values pre-defined above.
+The extension adds three magic words to your mediawiki:
+1. wikidatashow: creates a box like to one in the example
+1. wikidatashowlite: takes in the p-value you want to show and only shows this information (fits great if you want to display local data from semantic mediawiki together with data from wikidata)
+1. wikidatashoweasy: does the same as wikidatashowlite, but gives back the raw result without any formatting. If you type {{#wikidatashowlite:P18, Q1533809}}, you get: https://d-nb.info/gnd/2012843-5if you type {{#wikidatashowwasy:P18, Q1533809}}, you get: 2012843-5. wikidatashoweasy can be used with all p-values, wikidatashowlite only with p-values pre-defined above.
 Example:
 
 ![alt text](https://raw.githubusercontent.com/julianhocker/wikidatashow/master/example.png "Example of extension")
