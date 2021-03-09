@@ -246,6 +246,11 @@ class WikidataShowHooks {
                 return self::getMultipleData($properties, "P108");
             case "P1066"://student of
                 return self::getMultipleData($properties, "P1066");
+            case "P625"://coordinates
+                $coordinates = self::getData($properties, "P625");
+                $pattern = "[\d]+.[\d]+";
+                $split = preg_split ( string $pattern , string $coordinates)
+                return "{{#display_map:$split[1], $split[0]}}"
             default:
                 return "not defined";
         }
