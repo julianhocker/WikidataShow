@@ -63,10 +63,11 @@ class WikidataShowHooks {
         if($image == "not defined"){
             $imagewiki = "not defined";
         }else{
-            $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
+            $image = substr($image, 51);#hack, trim the link to wikimedia commons
             $imagewiki = "[[File:$image|400px]]";
         }
-        $adress = self::getData($properties, "P6375");
+        $adress = self::getAdress($wikidataentry, $wikilanguage);
+
         $website = self::getData($properties, "P856");
         $coordinates = self::getData($properties, "P625");
         #names
@@ -205,7 +206,7 @@ class WikidataShowHooks {
                 if($image == "not defined"){
                     return wfMessage('unknown')->plain();
                 }else{
-                    $image = substr($image, 51, 100);#hack, trim the link to wikimedia commons
+                    $image = substr($image, 51);#hack, trim the link to wikimedia commons
                     return "[[File:$image|400px]]";
                 }
             case "P227":#gnd entry
@@ -225,7 +226,7 @@ class WikidataShowHooks {
             case "P856"://website
                  return self::getData($properties, "P856");
             case "P6375"://street adress
-                return self::getData($properties, "P6375");
+                return self::getAdress($wikidataentry, $wikilanguage);
             case "P31": //instances
                 return self::getMultipleData($properties, "P31");
             case "P137"://operator
@@ -343,6 +344,31 @@ class WikidataShowHooks {
                       $wikipedialink = str_replace(" ","_",$wikipedialink); #hack to make link pretty
 
                       return $wikipedialink;
+                  }
+            }
+            //catch exception
+            catch(Exception $e) {
+                return $e->getMessage();
+            }
+      }
+
+      public static function getAdress($wikidataentry = "", $wikilanguage = ""){
+            $url = "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=$wikidataentry&format=json";
+            $json_data = file_get_contents($url);
+            $apiresponse = json_decode($json_data, true);
+       		try {
+                  if (empty($apiresponse['entities'][$wikidataentry]['claims']['P6375'])){
+                      throw new Exception("not defined");
+                  }else {
+                      $adresses = $apiresponse['entities'][$wikidataentry]['claims']['P6375'];
+                      foreach ($adresses as $rkey => $adress){
+
+                          if ($adress['rank'] == 'preferred'){
+                              $adressreturn  = $adress['mainsnak']['datavalue']['value']['text'];
+                          } else {
+                          }
+                      }
+                      return $adressreturn;
                   }
             }
             //catch exception
